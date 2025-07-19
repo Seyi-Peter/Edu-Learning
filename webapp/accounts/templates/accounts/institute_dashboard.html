@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Welcome {{ request.user.first_name }} to your Institute Dashboard</h2>
+
+  <p><strong>Institute Name:</strong> {{ profile.name }}</p>
+  <p><strong>Address:</strong> {{ profile.address }}</p>
+
+  <hr>
+  <h3>Registered Students</h3>
+  <ul>
+    {% for student in students %}
+      <li>
+        {{ student.user.username }}
+        (
+        {% if student.is_private %}
+          Private
+        {% else %}
+          Institute
+        {% endif %}
+        )
+      </li>
+    {% empty %}
+      <li>No students registered yet.</li>
+    {% endfor %}
+  </ul>
+
+
+  <h3>Registered Teachers</h3>
+  <ul>
+    {% for teacher in teachers %}
+      <li>{{ teacher.user.username }} ({{ "Private" if teacher.is_private else "Institute" }})</li>
+    {% empty %}
+      <li>No teachers registered yet.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
