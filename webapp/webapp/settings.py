@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django_extensions',  # For custom user model
     'accounts',  # Custom app for user accounts
     'adminpanel',  # Custom admin panel app
+    'institutes',  # Custom app for institutes
 ]
 
 AUTH_USER_MODEL = 'accounts.CustomUser'

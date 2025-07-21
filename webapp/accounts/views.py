@@ -19,7 +19,7 @@ User = get_user_model()
 
 
 def home(request):
-    return render(request, 'accounts/home.html')
+    return render(request, 'home.html')
 
 
 def student_signup(request):
@@ -99,6 +99,8 @@ def dashboard(request):
         return render(request, 'accounts/student_dashboard.html')
     elif request.user.role == 'teacher':
         return render(request, 'accounts/teacher_dashboard.html')
+    elif request.user.is_superuser:
+        return redirect('adminpanel:admin_dashboard')
     else:
         return render(request, 'accounts/dashboard.html')  # fallback
  
@@ -269,7 +271,7 @@ def admin_dashboard(request):
         'private_students': StudentProfile.objects.filter(is_private=True).count(),
         'public_students': StudentProfile.objects.filter(is_private=False).count(),
     }
-    return render(request, 'accounts/admin_dashboard.html', context)
+    return render(request, 'adminpanel/dashboard.html', context)
 
 def secure_logout(request):
     # Optional: clear all sessions for the current user

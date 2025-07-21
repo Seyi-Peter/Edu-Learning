@@ -1,20 +1,27 @@
 from django import forms
 from accounts.models import CustomUser, InstituteProfile
 
-class InstituteCreationForm(forms.ModelForm):
-    email = forms.EmailField()
+class InstituteCreationForm(forms.Form):
+    email = forms.EmailField(label="Official Email")
     password = forms.CharField(widget=forms.PasswordInput)
-    name = forms.CharField()
-    address = forms.CharField()
-
-    class Meta:
-        model = CustomUser
-        fields = ['email', 'password']
+    name = forms.CharField(label="Institute Name")
+    address = forms.CharField(label="Institute Address")
 
     def save(self, commit=True):
-        user = super().save(commit=False)
+        # Create user
+        user = CustomUser(
+            email=self.cleaned_data['email'],
+            role='institute'
+        )
         user.set_password(self.cleaned_data['password'])
-        user.role = 'institute'
+        
+        # Validate email uniqueness
+        def clean_email(self):
+            email = self.cleaned_data['email']
+            if CustomUser.objects.filter(email=email).exists():
+                raise forms.ValidationError("A user with this email already exists.")
+            return email
+        # Save user if commit is True
         if commit:
             user.save()
             InstituteProfile.objects.create(
@@ -23,3 +30,4 @@ class InstituteCreationForm(forms.ModelForm):
                 address=self.cleaned_data['address']
             )
         return user
+    

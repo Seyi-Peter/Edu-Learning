@@ -5,10 +5,10 @@
   <p>Welcome, Superuser!</p>
 
   <ul>
-    <li><a href="{% url 'manage_students' %}">Manage Students</a></li>
-    <li><a href="{% url 'manage_teachers' %}">Manage Teachers</a></li>
-    <li><a href="{% url 'manage_institutes' %}">Manage Institutes</a></li>
+    <li><a href="{% url 'adminpanel:manage_students' %}">Manage Students</a></li>
+    <li><a href="{% url 'adminpanel:manage_teachers' %}">Manage Teachers</a></li>
+    <li><a href="{% url 'adminpanel:manage_institutes' %}">Manage Institutes</a></li>
   </ul>
-  <a href="{% url 'admin_logout' %}">Logout</a>
+  <a href="{% url 'adminpanel:admin_logout' %}">Logout</a>
 
 {% endblock %}

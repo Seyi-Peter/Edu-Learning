@@ -2,7 +2,7 @@
 
 {% block content %}
   <h2>Manage Institutes</h2>
-  <a href="{% url 'create_institute' %}" class="btn btn-primary">+ Add New Institute</a>
+  <a href="{% url 'adminpanel:create_institute' %}" class="btn btn-primary">+ Add New Institute</a>
   <ul>
     {% for institute in institutes %}
       <li>{{ institute.name }} — {{ institute.user.email }}</li>

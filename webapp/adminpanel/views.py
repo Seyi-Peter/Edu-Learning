@@ -8,10 +8,9 @@ from django.contrib.auth import logout
 
 from .forms import InstituteCreationForm
 
+
 @staff_member_required
 def admin_dashboard(request):
-    if admin_dashboard(request):
-        return redirect('/admin')
     total_students = StudentProfile.objects.count()
     total_teachers = TeacherProfile.objects.count()
     total_institutes = InstituteProfile.objects.count()
@@ -49,7 +48,7 @@ def create_institute(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Institute account created successfully.")
-            return redirect('manage_institutes')
+            return redirect('adminpanel:manage_institutes')
     else:
         form = InstituteCreationForm()
     return render(request, 'adminpanel/create_institute.html', {'form': form})
