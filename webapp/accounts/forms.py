@@ -153,3 +153,32 @@ class InstituteProfileForm(forms.ModelForm):
     class Meta:
         model = InstituteProfile
         fields = ['name', 'address']
+
+
+class StudentCreationForm(UserCreationForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'password1', 'password2']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.role = 'student'
+        if commit:
+            user.save()
+            StudentProfile.objects.create(user=user)
+        return user
+
+
+class TeacherCreationForm(UserCreationForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'password1', 'password2']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.role = 'teacher'
+        if commit:
+            user.save()
+            TeacherProfile.objects.create(user=user)
+        return user
+

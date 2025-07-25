@@ -1,4 +1,5 @@
 from django.db import models
+from accounts.models import StudentProfile, TeacherProfile, InstituteProfile    
 
 # Create your models here.
 class Institute(models.Model):

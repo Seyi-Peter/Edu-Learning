@@ -27,7 +27,7 @@ urlpatterns = [
     path('', accounts_views.home, name='home'),
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
-
+    path('institutes/', include('institutes.urls', namespace='institutes')),
     path('staffmember/', include('adminpanel.urls')),  # custom admin/ Staff Member Only
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

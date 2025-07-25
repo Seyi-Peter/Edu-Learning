@@ -12,6 +12,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordChangeView, LoginView
 from django.contrib.admin.views.decorators import staff_member_required
 
+from .utils import institute_required, teacher_required, student_required, admin_required
 from .forms import StudentSignupForm, TeacherSignupForm, StudentProfileUpdateForm, TeacherProfileUpdateForm, InstituteProfileForm
 from .models import StudentProfile, TeacherProfile, InstituteProfile, CustomUser
 
@@ -70,40 +71,46 @@ def institute_profile(request):
     return render(request, 'accounts/institute_profile.html', {'profile': profile})
 
 @never_cache
-@login_required
+@institute_required
 def institute_dashboard(request):
-    if request.user.role != 'institute':
-        return redirect('dashboard')  # or raise a 403
-
     profile = request.user.instituteprofile
-
-    # fetch related students and teachers
     students = profile.studentprofile_set.all()
     teachers = profile.teacherprofile_set.all()
+    return render(request, 'accounts/institute_dashboard.html', {'profile': profile, 'students': students, 'teachers': teachers})
 
-    return render(request, 'accounts/institute_dashboard.html', {
-        'profile': profile,
-        'students': students,
-        'teachers': teachers,
-    })
+@student_required
+def student_dashboard(request):
+    return render(request, 'accounts/student_dashboard.html')
 
-@never_cache
+@teacher_required
+def teacher_dashboard(request):
+    return render(request, 'accounts/teacher_dashboard.html')
+
+@admin_required
+def admin_dashboard(request):
+    context = {
+        'total_students': CustomUser.objects.filter(role='student').count(),
+        'total_teachers': CustomUser.objects.filter(role='teacher').count(),
+        'total_institutes': InstituteProfile.objects.count(),
+        'private_students': StudentProfile.objects.filter(is_private=True).count(),
+        'public_students': StudentProfile.objects.filter(is_private=False).count(),
+    }
+    return render(request, 'adminpanel/dashboard.html', context)
+
 @login_required
 def dashboard(request):
-    """
-    Generic dashboard view that redirects users to role-specific dashboards.
-    """
+    # Redirect based on role
     if request.user.role == 'institute':
         return redirect('institute_dashboard')
     elif request.user.role == 'student':
-        return render(request, 'accounts/student_dashboard.html')
+        return redirect('student_dashboard')
     elif request.user.role == 'teacher':
-        return render(request, 'accounts/teacher_dashboard.html')
+        return redirect('teacher_dashboard')
     elif request.user.is_superuser:
-        return redirect('adminpanel:admin_dashboard')
+        return redirect('admin_dashboard')
     else:
-        return render(request, 'accounts/dashboard.html')  # fallback
- 
+        messages.warning(request, "No dashboard found for your role.")
+        return render(request, 'accounts/dashboard.html')
 
 @login_required
 def institute_profile(request):
@@ -263,6 +270,7 @@ class TeacherPasswordChangeView(PasswordChangeView):
     
 
 @staff_member_required
+@admin_required
 def admin_dashboard(request):
     context = {
         'total_students': CustomUser.objects.filter(role='student').count(),
