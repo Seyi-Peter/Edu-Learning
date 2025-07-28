@@ -3,11 +3,13 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .models import StudentProfile, TeacherProfile, InstituteProfile
-from accounts.forms import StudentCreationForm, TeacherCreationForm
-from django.contrib.auth.models import User
+from institutes.forms import StudentCreationForm, TeacherCreationForm
+from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from accounts.utils import institute_required
+
+User = get_user_model()
 
 @login_required
 def institute_dashboard(request):
@@ -25,6 +27,7 @@ def create_student(request):
                 username=form.cleaned_data['username'],
                 email=form.cleaned_data['email'],
                 password=make_password(form.cleaned_data['password']),
+                is_private=False  # Assuming students are not private   
             )
             institute_profile = InstituteProfile.objects.get(user=request.user)
             StudentProfile.objects.create(user=user, institute=institute_profile)

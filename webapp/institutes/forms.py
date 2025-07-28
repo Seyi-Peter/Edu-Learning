@@ -1,13 +1,17 @@
+#institutes/forms.py
+
 from django import forms
+
 from .models import StudentProfile, TeacherProfile, InstituteProfile
 from django.contrib.auth.forms import UserCreationForm
-from .models import User
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class StudentCreationForm(forms.Form):
     username = forms.CharField(max_length=150, required=True, label="Username")
     email = forms.EmailField(required=True, label="Email")
-    password = forms.CharField(widget=forms.PasswordInput, required=True, label="Password")
+    password = forms.CharField(widget=forms.PasswordInput)
     def clean_username(self):
         """Ensure the username is unique."""
         username = self.cleaned_data.get('username')
@@ -25,7 +29,7 @@ class StudentCreationForm(forms.Form):
 class TeacherCreationForm(forms.Form):
     username = forms.CharField(max_length=150, required=True, label="Username")
     email = forms.EmailField(required=True, label="Email")
-    password = forms.CharField(widget=forms.PasswordInput, required=True, label="Password")
+    password = forms.CharField(widget=forms.PasswordInput)
     is_private = forms.BooleanField(required=False, label="Private Teacher?")
     def clean_username(self):
         """Ensure the username is unique."""

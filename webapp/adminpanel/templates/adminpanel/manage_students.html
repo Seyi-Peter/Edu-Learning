@@ -3,20 +3,29 @@
 {% block content %}
   <h2>All Students</h2>
   <table border="1">
-    <tr>
-      <th>Username</th>
-      <th>Email</th>
-      <th>Institute</th>
-      <th>Private</th>
-    </tr>
-    {% for student in students %}
+    <thead>
       <tr>
-        <td>{{ student.user.username }}</td>
-        <td>{{ student.user.email }}</td>
-        <td>{{ student.institute.name|default:"Private Student" }}</td>
-        <td>{{ student.is_private }}</td>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Institute</th> 
       </tr>
-    {% endfor %}
+    </thead>
+    <tbody>
+      {% for student in students %}
+        <tr>
+          <td>{{ student.user.username }}</td>
+          <td>{{ student.user.email }}</td>
+          <td>
+            {% if student.is_private %}
+              Private
+            {% else %}
+              {{ student.institute.name }}
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="3">No students found.</td></tr>
+      {% endfor %}
+    </tbody>
   </table>
-  
 {% endblock %}
