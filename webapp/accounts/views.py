@@ -86,6 +86,7 @@ def student_dashboard(request):
 def teacher_dashboard(request):
     return render(request, 'accounts/teacher_dashboard.html')
 
+@never_cache
 @admin_required
 def admin_dashboard(request):
     context = {
