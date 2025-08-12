@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Welcome, {{ request.user.first_name }}!</h2>
+  <p>You are logged in as a <strong>Teacher</strong>.</p>
+
+  {% if request.user.teacherprofile %}
+    {% if request.user.teacherprofile.is_private %}
+      <p>This is a <strong>private account</strong>.</p>
+    {% else %}
+      <p>You belong to <strong>{{ request.user.teacherprofile.institute.name }}</strong>.</p>
+    {% endif %}
+  {% else %}
+    <p>Your profile is incomplete.</p>
+  {% endif %}
+
+  <p>
+    <a href="{% url 'teacher_profile' %}">
+      <button style="padding: 10px 20px; background-color: #0069d9; color: white; border: none; border-radius: 5px;">
+        My Profile
+      </button>
+    </a>
+  </p>
+
+{% endblock %}

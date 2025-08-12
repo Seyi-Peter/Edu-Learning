@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <a href="{% url 'home' %}" class="logo">iLearning</a>
+  <h2>Teacher Registration</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <div>
+      <label for="id_first_name">First Name:</label>
+      {{ form.first_name }}
+      {{ form.first_name.errors }}
+    </div>
+
+    <div>
+      <label for="id_last_name">Last Name:</label>
+      {{ form.last_name }}
+      {{ form.last_name.errors }}
+    </div>
+
+    <div>
+      <label for="id_username">Username:</label>
+      {{ form.username }}
+      {{ form.username.errors }}
+    </div>
+
+    <div>
+      <label for="id_email">Email:</label>
+      {{ form.email }}
+      {{ form.email.errors }}
+    </div>
+
+    <div>
+      <label for="id_password1">Password:</label>
+      {{ form.password1 }}
+      {{ form.password1.errors }}
+    </div>
+
+    <div>
+      <label for="id_password2">Confirm Password:</label>
+      {{ form.password2 }}
+      {{ form.password2.errors }}
+    </div>
+
+    <div>
+      <label for="id_is_private">Registering as a private teacher?</label>
+      {{ form.is_private }}
+    </div>
+
+    <div>
+      <label for="id_institute">Choose your institute (leave blank if private):</label>
+      {{ form.institute }}
+      {{ form.institute.errors }}
+    </div>
+
+    <button type="submit">Register as Teacher</button>
+  </form>
+
+  <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'adminpanel/base.html' %}
+
+{% block content %}
+  <h2>Create Institute Account</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Register Institute</button>
+  </form>
+  <a href="{% url 'admin_dashboard' %}">Back to Dashboard</a>
+{% endblock %}

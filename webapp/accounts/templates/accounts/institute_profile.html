@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Institute Profile</h2>
+  <p><strong>Name:</strong> {{ profile.name }}</p>
+  <p><strong>Address:</strong> {{ profile.address }}</p>
+
+  <a href="{% url 'edit_institute_profile' %}">
+    <button>Edit Profile</button>
+  </a>
+{% endblock %}
