@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Student Signup</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background-color: #f2f2f2;
+        }
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        .header {
+            text-align: center;
+            font-size: 24px;
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .signup-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 400px;
+            margin: 40px auto;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #2aa11f;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .login-link a {
+            color: #445bdb;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bgCanvas"></canvas>
+
+    <div class="signup-container">
+        <h2 class="header">Student Signup</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <p>{{ form.username.label_tag }} {{ form.username }}</p>
+            <p>{{ form.first_name.label_tag }} {{ form.first_name }}</p>
+            <p>{{ form.last_name.label_tag }} {{ form.last_name }}</p>
+            <p>{{ form.email.label_tag }} {{ form.email }}</p>
+            <p>{{ form.password1.label_tag }} {{ form.password1 }}</p>
+            <p>{{ form.password2.label_tag }} {{ form.password2 }}</p>
+            <p id="is_private">{{ form.is_private.label_tag }} {{ form.is_private }}</p>
+            <div id="institute-field">
+                <p>{{ form.institute.label_tag }} {{ form.institute }}</p>
+            </div>
+            <button type="submit">Sign Up</button>
+        </form>
+        <div class="login-link">
+            Already have an account? <a href="{% url 'login' %}">Login</a>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        const colors = ["#ff6f61", "#6b5b95", "#88b04b", "#f7cac9", "#92a8d1", "#ffcc5c"];
+
+        function randomShapePoints(type, size) {
+            let points = [];
+            let sides = type === "triangle" ? 3 :
+                        type === "pentagon" ? 5 :
+                        type === "hexagon" ? 6 : 4;
+            for (let i = 0; i < sides; i++) {
+                let angle = (i * 2 * Math.PI) / sides;
+                points.push({x: size * Math.cos(angle), y: size * Math.sin(angle)});
+            }
+            return points;
+        }
+
+        class Shape {
+            constructor(x, y, size, color, type) {
+                this.x = x;
+                this.y = y;
+                this.size = size;
+                this.color = color;
+                this.type = type;
+                this.points = randomShapePoints(type, size);
+                this.dx = (Math.random() - 0.5) * 1.2;
+                this.dy = (Math.random() - 0.5) * 1.2;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.moveTo(this.x + this.points[0].x, this.y + this.points[0].y);
+                for (let p of this.points.slice(1)) {
+                    ctx.lineTo(this.x + p.x, this.y + p.y);
+                }
+                ctx.closePath();
+                ctx.fill();
+            }
+            update() {
+                this.x += this.dx;
+                this.y += this.dy;
+
+                if (this.x - this.size < 0 || this.x + this.size > canvas.width) this.dx *= -1;
+                if (this.y - this.size < 0 || this.y + this.size > canvas.height) this.dy *= -1;
+
+                this.draw();
+            }
+        }
+
+        let shapes = [];
+        let shapeTypes = ["triangle", "pentagon","circle", "hexagon"];
+        for (let i = 0; i < 12; i++) {
+            let size = Math.random() * 50 + 40;
+            shapes.push(new Shape(
+                Math.random() * canvas.width,
+                Math.random() * canvas.height,
+                size,
+                colors[Math.floor(Math.random() * colors.length)],
+                shapeTypes[Math.floor(Math.random() * shapeTypes.length)]
+            ));
+        }
+
+        function animate() {
+            ctx.fillStyle = "rgba(240,240,240,0.3)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            shapes.forEach(s => s.update());
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        document.addEventListener("DOMContentLoaded", function () {
+            let privateCheckbox = document.querySelector("#id_is_private");
+            let instituteField = document.getElementById("institute-field");
+
+            function toggleInstitute() {
+                if (privateCheckbox.checked) {
+                    instituteField.style.display = "none";
+                } else {
+                    instituteField.style.display = "block";
+                }
+            }
+
+            toggleInstitute(); // Run on page load
+            privateCheckbox.addEventListener("change", toggleInstitute);
+        });
+    </script>
+</body>
+</html>

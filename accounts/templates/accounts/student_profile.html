@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md mt-10">
+  <h2 class="text-3xl font-semibold text-gray-800 mb-6">My Profile</h2>
+
+  <div class="flex items-center mb-6">
+    {% if profile.profile_picture %}
+      <img 
+        src="{{ profile.profile_picture.url }}" 
+        alt="Profile Picture" 
+        class="w-28 h-28 rounded-full object-cover border-4 border-green-600"
+      >
+    {% else %}
+      <div class="w-28 h-28 flex items-center justify-center rounded-full bg-gray-200 text-green-600 font-medium border-4 border-green-600">
+        No Image
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="space-y-3 text-gray-700 text-lg">
+    <p><strong class="text-gray-900">Name:</strong> {{ request.user.first_name }} {{ request.user.last_name }}</p>
+    <p><strong class="text-gray-900">Username:</strong> {{ request.user.username }}</p>
+    <p><strong class="text-gray-900">Email:</strong> {{ request.user.email }}</p>
+    <p><strong class="text-gray-900">Bio:</strong> {{ profile.bio|default:"No bio yet." }}</p>
+    <p><strong class="text-gray-900">Date of Birth:</strong> {{ profile.date_of_birth|date:"F j, Y" }}</p>
+
+    {% if profile.is_private %}
+      <p><strong class="text-gray-900">Student Type:</strong> Private</p>
+    {% else %}
+      <p><strong class="text-gray-900">Institute:</strong> {{ profile.institute.name }}</p>
+    {% endif %}
+  </div>
+
+  <div class="mt-8 flex space-x-6">
+    <a href="{% url 'edit_student_profile' %}" 
+       class="px-5 py-3 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 transition duration-300"
+    >
+      Edit Profile
+    </a>
+    <a href="{% url 'student_password_change' %}" 
+       class="px-5 py-3 bg-gray-600 text-white font-semibold rounded-lg shadow hover:bg-gray-700 transition duration-300"
+    >
+      Change Password
+    </a>
+  </div>
+
+  <form method="POST" action="{% url 'logout' %}" class="mt-8">
+    {% csrf_token %}
+    <button 
+      type="submit" 
+      class="px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition duration-300 shadow"
+    >
+      Logout
+    </button>
+  </form>
+</div>
+{% endblock %}

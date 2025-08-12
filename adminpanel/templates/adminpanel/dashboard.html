@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Admin Dashboard</h2>
+  <p>Welcome, Superuser!</p>
+
+  <div>
+    <p><strong>Total Students:</strong> {{ total_students }}</p>
+    <p><strong>Total Teachers:</strong> {{ total_teachers }}</p>
+    <p><strong>Total Institutes:</strong> {{ total_institutes }}</p>
+    <p><strong>Private Students:</strong> {{ private_students }}</p>
+    <p><strong>Public Students:</strong> {{ public_students }}</p>
+  </div>
+
+  <ul>
+    <li><a href="{% url 'adminpanel:manage_students' %}">Manage Students</a></li>
+    <li><a href="{% url 'adminpanel:manage_teachers' %}">Manage Teachers</a></li>
+    <li><a href="{% url 'adminpanel:manage_institutes' %}">Manage Institutes</a></li>
+  </ul>
+  <a href="{% url 'adminpanel:admin_logout' %}">Logout</a>
+
+{% endblock %}
