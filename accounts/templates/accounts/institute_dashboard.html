@@ -1,57 +1,86 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h2>Welcome {{ request.user.first_name }} to your Institute Dashboard</h2>
+<div class="max-w-7xl mx-auto p-6">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-xl shadow-lg p-6 text-white mb-8">
+        <h2 class="text-2xl font-bold">Welcome {{ request.user.first_name }}</h2>
+        <p class="mt-1 text-blue-100 text-sm">Your Institute Dashboard</p>
+    </div>
 
-  <p><strong>Institute Name:</strong> {{ profile.name }}</p>
-  <p><strong>Address:</strong> {{ profile.address }}</p>
+    <!-- Institute Info Card -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+        <h3 class="text-lg font-semibold text-gray-700 mb-4">Institute Information</h3>
+        <div class="space-y-2 text-gray-600">
+            <p><strong class="text-gray-800">Name:</strong> {{ profile.name }}</p>
+            <p><strong class="text-gray-800">Address:</strong> {{ profile.address }}</p>
+        </div>
+    </div>
 
-  <hr>
+    <!-- Registered Students -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold text-gray-700">Registered Students</h3>
+            <a href="{% url 'institute:create_student' %}" class="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition">
+                + Add Student
+            </a>
+        </div>
+        {% if students %}
+            <ul class="divide-y divide-gray-200">
+                {% for student in students %}
+                    <li class="py-3 flex justify-between items-center">
+                        <span>{{ student.user.username }}</span>
+                        <span class="text-sm text-gray-500">
+                            {% if student.institute %}
+                                {{ student.institute.name }}
+                            {% else %}
+                                No Institute
+                            {% endif %}
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-500 text-sm">No students registered yet.</p>
+        {% endif %}
+    </div>
 
-<h3>Registered Students</h3>
-<ul>
-  {% for student in students %}
-    <li>
-      {{ student.user.username }}
-      (
-      {% if student.institute %}
-        {{ student.institute.name }}
-      {% else %}
-        No Institute
-      {% endif %}
-      )
-    </li>
-  {% empty %}
-    <li>No students registered yet.</li>
-  {% endfor %}
-</ul>
+    <!-- Registered Teachers -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold text-gray-700">Registered Teachers</h3>
+            <a href="{% url 'institute:create_teacher' %}" class="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition">
+                + Add Teacher
+            </a>
+        </div>
+        {% if teachers %}
+            <ul class="divide-y divide-gray-200">
+                {% for teacher in teachers %}
+                    <li class="py-3 flex justify-between items-center">
+                        <span>{{ teacher.user.username }}</span>
+                        <span class="text-sm text-gray-500">
+                            {% if teacher.is_private %}
+                                Private
+                            {% else %}
+                                Institute
+                            {% endif %}
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-500 text-sm">No teachers registered yet.</p>
+        {% endif %}
+    </div>
 
-<h3>Registered Teachers</h3>
-<ul>
-  {% for teacher in teachers %}
-    <li>
-      {{ teacher.user.username }} (
-      {% if teacher.is_private %}
-        Private
-      {% else %}
-        Institute
-      {% endif %}
-      )
-    </li>
-  {% empty %}
-    <li>No teachers registered yet.</li>
-  {% endfor %}
-  </ul>
-  <a href="{% url 'institute:create_student' %}">Create Student</a>
-  <a href="{% url 'institute:create_teacher' %}">Create Teacher</a>
-
-  <p>
-    <form method="POST" action="{% url 'logout' %}" style="display: inline;">
-      {% csrf_token %}
-      <button type="submit" style="padding: 10px 20px; background-color: #dc3545; color: white; border: none; border-radius: 5px;">
-        Logout
-      </button>
-    </form>
-  </p>
-
+    <!-- Logout -->
+    <div class="text-center mt-8">
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-md transition">
+                Logout
+            </button>
+        </form>
+    </div>
+</div>
 {% endblock %}
