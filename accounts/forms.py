@@ -198,4 +198,3 @@ class TeacherCreationForm(UserCreationForm):
             user.save()
             TeacherProfile.objects.create(user=user)
         return user
-

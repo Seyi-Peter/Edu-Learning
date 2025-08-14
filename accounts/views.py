@@ -11,6 +11,9 @@ from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordChangeView, LoginView
 from django.contrib.admin.views.decorators import staff_member_required
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 from .utils import institute_required, teacher_required, student_required, admin_required
 from .forms import StudentSignupForm, TeacherSignupForm, StudentProfileUpdateForm, TeacherProfileUpdateForm, InstituteProfileForm
@@ -142,10 +145,6 @@ def student_profile_view(request):
     if request.method == 'POST':
         profile.bio = request.POST.get('bio', profile.bio)
         profile.date_of_birth = request.POST.get('date_of_birth', profile.date_of_birth)
-        if request.FILES.get('profile_picture'):
-            profile.profile_picture = request.FILES['profile_picture']
-        profile.save()
-        return redirect('student_profile')
 
     return render(request, 'accounts/student_profile.html', {
         'profile': profile

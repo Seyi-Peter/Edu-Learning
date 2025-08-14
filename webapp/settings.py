@@ -125,7 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
 from django.urls import reverse_lazy
 LOGIN_URL = '/accounts/login/'  # Redirect to login page if not authenticated
 LOGIN_REDIRECT_URL = reverse_lazy('dashboard') # Redirect to login page after login
-LOGOUT_REDIRECT_URL = '/login/'  # Redirect to login page after logout
+LOGOUT_REDIRECT_URL = '/account/login/'  # Redirect to login page after logout
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 

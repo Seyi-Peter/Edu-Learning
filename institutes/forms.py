@@ -8,35 +8,48 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 class StudentCreationForm(forms.Form):
     username = forms.CharField(max_length=150, required=True, label="Username")
     email = forms.EmailField(required=True, label="Email")
-    password = forms.CharField(widget=forms.PasswordInput)
+    password = forms.CharField(widget=forms.PasswordInput, label="Password")
+
     def clean_username(self):
         """Ensure the username is unique."""
         username = self.cleaned_data.get('username')
         if User.objects.filter(username=username).exists():
             raise forms.ValidationError("Username already exists.")
         return username
+
     def clean_email(self):
         """Ensure the email is unique."""
         email = self.cleaned_data.get('email')
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("Email already exists.")
         return email
-        
 
 class TeacherCreationForm(forms.Form):
-    username = forms.CharField(max_length=150, required=True, label="Username")
-    email = forms.EmailField(required=True, label="Email")
-    password = forms.CharField(widget=forms.PasswordInput)
-    is_private = forms.BooleanField(required=False, label="Private Teacher?")
+    username = forms.CharField(
+        max_length=150, 
+        required=True, 
+        label="Username"
+    )
+    email = forms.EmailField(
+        required=True, 
+        label="Email"
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput,
+        label="Password"
+    )
+
     def clean_username(self):
         """Ensure the username is unique."""
         username = self.cleaned_data.get('username')
         if User.objects.filter(username=username).exists():
             raise forms.ValidationError("Username already exists.")
         return username
+
     def clean_email(self):
         """Ensure the email is unique."""
         email = self.cleaned_data.get('email')

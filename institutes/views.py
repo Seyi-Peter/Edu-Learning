@@ -22,19 +22,28 @@ def create_student(request):
     if request.method == 'POST':
         form = StudentCreationForm(request.POST)
         if form.is_valid():
-            institute = InstituteProfile.objects.get(user=request.user)
+            # Get the institute creating the student
+            institute_profile = InstituteProfile.objects.get(user=request.user)
+
+            # Create the new user account
             user = User.objects.create(
                 username=form.cleaned_data['username'],
                 email=form.cleaned_data['email'],
                 password=make_password(form.cleaned_data['password']),
-                is_private=False  # Assuming students are not private   
+                role ='student'  
             )
-            institute_profile = InstituteProfile.objects.get(user=request.user)
-            StudentProfile.objects.create(user=user, institute=institute_profile)
+
+            # Link to student profile tied to the institute
+            StudentProfile.objects.create(
+                user=user,
+                institute=institute_profile
+            )
+
             messages.success(request, 'Student created successfully!')
             return redirect('institute_dashboard')
     else:
         form = StudentCreationForm()
+
     return render(request, 'institute/create_student.html', {'form': form})
 
 @institute_required
@@ -43,18 +52,24 @@ def create_teacher(request):
     if request.method == 'POST':
         form = TeacherCreationForm(request.POST)
         if form.is_valid():
-            institute = InstituteProfile.objects.get(user=request.user)
+            institute_profile = InstituteProfile.objects.get(user=request.user)
+
             user = User.objects.create(
                 username=form.cleaned_data['username'],
                 email=form.cleaned_data['email'],
                 password=make_password(form.cleaned_data['password']),
+                role= 'teacher'
             )
-            institute_profile = InstituteProfile.objects.get(user=request.user)
-            is_private = form.cleaned_data.get('is_private', False)
-            TeacherProfile.objects.create(user=user, institute=institute_profile, is_private=is_private)
+
+            # All teachers are tied to the institute, is_private always False
+            TeacherProfile.objects.create(
+                user=user,
+                institute=institute_profile,
+                is_private=False
+            )
+
             messages.success(request, 'Teacher created successfully!')
             return redirect('institute_dashboard')
     else:
         form = TeacherCreationForm()
     return render(request, 'institute/create_teacher.html', {'form': form})
-

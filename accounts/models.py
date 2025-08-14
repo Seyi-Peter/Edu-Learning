@@ -1,7 +1,9 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
+import os
 
+# Custom User Model
 class CustomUser(AbstractUser):
     USER_ROLES = (
         ('student', 'Student'),
@@ -14,7 +16,6 @@ class CustomUser(AbstractUser):
     role = models.CharField(max_length=10, choices=USER_ROLES)
     is_verified = models.BooleanField(default=False)
     email = models.EmailField(unique=True) # Ensure email is unique
-    
 
     def __str__(self):
         return f"{self.username} ({self.role})"
@@ -33,7 +34,6 @@ class StudentProfile(models.Model):
     is_private = models.BooleanField(default=True)
     bio = models.TextField(blank=True, null=True)
     date_of_birth = models.DateField(null=True, blank=True)
-    profile_picture = models.ImageField(upload_to='students_profiles/', blank=True, null=True)
 
 
     def __str__(self):
