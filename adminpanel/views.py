@@ -12,15 +12,23 @@ from .forms import InstituteCreationForm
 
 @staff_member_required
 def admin_dashboard(request):
+    # Total counts
     total_students = StudentProfile.objects.count()
     total_teachers = TeacherProfile.objects.count()
     total_institutes = InstituteProfile.objects.count()
 
-    return render(request, 'adminpanel/dashboard.html', {
+    # Private counts
+    private_students = StudentProfile.objects.filter(institute__isnull=True).count()
+    private_teachers = TeacherProfile.objects.filter(institute__isnull=True).count()
+
+    context = {
         'total_students': total_students,
         'total_teachers': total_teachers,
         'total_institutes': total_institutes,
-    })
+        'private_students': private_students,
+        'private_teachers': private_teachers,
+    }
+    return render(request, 'adminpanel/dashboard.html', context)
 
 @staff_member_required
 def manage_students(request):
@@ -41,7 +49,7 @@ def manage_institutes(request):
 @login_required
 def custom_admin_logout(request):
     logout(request)
-    return redirect('login')
+    return redirect('home')
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @staff_member_required

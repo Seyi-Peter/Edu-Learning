@@ -71,7 +71,7 @@ def institute_profile(request):
         return redirect('dashboard')
 
     profile = request.user.instituteprofile
-    return render(request, 'accounts/institute_profile.html', {'profile': profile})
+    return render(request, 'institute/institute_profile.html', {'profile': profile})
 
 @never_cache
 @institute_required
@@ -79,7 +79,7 @@ def institute_dashboard(request):
     profile = request.user.instituteprofile
     students = profile.studentprofile_set.all()
     teachers = profile.teacherprofile_set.all()
-    return render(request, 'accounts/institute_dashboard.html', {'profile': profile, 'students': students, 'teachers': teachers})
+    return render(request, 'institute/institute_dashboard.html', {'profile': profile, 'students': students, 'teachers': teachers})
 
 @student_required
 def student_dashboard(request):

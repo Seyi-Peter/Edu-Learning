@@ -1,22 +1,57 @@
-{% extends 'base.html' %}
+{% extends 'adminpanel/base.html' %}
 
 {% block content %}
-  <h2>Admin Dashboard</h2>
-  <p>Welcome, Superuser!</p>
+<div class="max-w-6xl mx-auto px-4 py-6">
+  <!-- Page Title -->
+  <h2 class="text-2xl font-bold text-gray-800 mb-2">Admin Dashboard</h2>
+  <p class="text-gray-600 mb-6">Welcome, <span class="font-semibold">Superuser</span>!</p>
 
-  <div>
-    <p><strong>Total Students:</strong> {{ total_students }}</p>
-    <p><strong>Total Teachers:</strong> {{ total_teachers }}</p>
-    <p><strong>Total Institutes:</strong> {{ total_institutes }}</p>
-    <p><strong>Private Students:</strong> {{ private_students }}</p>
-    <p><strong>Public Students:</strong> {{ public_students }}</p>
+  <!-- Stats Section -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+    <div class="bg-white shadow rounded-lg p-4 border">
+      <p class="text-sm text-gray-500">Total Students</p>
+      <p class="text-xl font-semibold text-blue-600">{{ total_students }}</p>
+    </div>
+    <div class="bg-white shadow rounded-lg p-4 border">
+      <p class="text-sm text-gray-500">Total Teachers</p>
+      <p class="text-xl font-semibold text-green-600">{{ total_teachers }}</p>
+    </div>
+    <div class="bg-white shadow rounded-lg p-4 border">
+      <p class="text-sm text-gray-500">Total Institutes</p>
+      <p class="text-xl font-semibold text-purple-600">{{ total_institutes }}</p>
+    </div>
+    <div class="bg-white shadow rounded-lg p-4 border">
+      <p class="text-sm text-gray-500">Private Students</p>
+      <p class="text-xl font-semibold text-orange-600">{{ private_students }}</p>
+    </div>
+    <div class="bg-white shadow rounded-lg p-4 border">
+      <p class="text-sm text-gray-500">Private Teachers</p>
+      <p class="text-xl font-semibold text-red-600">{{ private_teachers }}</p>
+    </div>
   </div>
 
-  <ul>
-    <li><a href="{% url 'adminpanel:manage_students' %}">Manage Students</a></li>
-    <li><a href="{% url 'adminpanel:manage_teachers' %}">Manage Teachers</a></li>
-    <li><a href="{% url 'adminpanel:manage_institutes' %}">Manage Institutes</a></li>
-  </ul>
-  <a href="{% url 'adminpanel:admin_logout' %}">Logout</a>
-
+  <!-- Management Links -->
+  <div class="bg-white shadow rounded-lg p-4 border mb-6">
+    <ul class="space-y-2">
+      <li>
+        <a href="{% url 'adminpanel:manage_students' %}" 
+           class="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition">
+          Manage Students
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'adminpanel:manage_teachers' %}" 
+           class="px-3 py-1 bg-purple-600 text-white text-sm rounded hover:bg-purple-700 transition">
+          Manage Teachers
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'adminpanel:manage_institutes' %}" 
+           class="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition">
+          Manage Institutes
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
 {% endblock %}

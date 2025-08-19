@@ -3,4 +3,13 @@
 {% block content %}
   <h2>Welcome to your dashboard!</h2>
   <p>Your role is not recognized. Please contact support.</p>
+  <form method="POST" action="{% url 'logout' %}" class="mt-8">
+    {% csrf_token %}
+    <button 
+      type="submit" 
+      class="px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition duration-300 shadow"
+    >
+      Logout
+    </button>
+  </form>
 {% endblock %}

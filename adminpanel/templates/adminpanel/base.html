@@ -2,16 +2,77 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Admin Panel{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <header>
-        <h1>Admin Panel</h1>
-        <hr>
-    </header>
+<body class="bg-gray-100 min-h-screen flex flex-col">
 
-    <main>
+    <!-- Navbar -->
+    <nav class="bg-gray-800 text-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Left -->
+                <div class="flex items-center">
+                    <span class="text-lg font-semibold">Admin Panel</span>
+                </div>
+
+                <!-- Right -->
+                <div class="flex items-center space-x-4">
+                    <a href="{% url 'adminpanel:admin_dashboard' %}" 
+                       class="hover:bg-gray-700 px-3 py-2 rounded">
+                        Dashboard
+                    </a>
+                    <a href="{% url 'adminpanel:admin_logout' %}" 
+                       class="bg-red-500 hover:bg-red-600 px-3 py-2 rounded text-white">
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <main class="flex-grow max-w-7xl mx-auto p-6">
         {% block content %}{% endblock %}
     </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center py-3">
+        <p class="text-sm">&copy; {{ now|date:"Y" }} Admin Panel. All rights reserved.</p>
+    </footer>
+
+    <script>
+        (function () {
+        let logoutTimer;
+        const TIMEOUT_DURATION = 10 * 60 * 1000; // 10 minutes
+        const LOGOUT_URL = "/account/login/";
+
+        function resetTimer() {
+            clearTimeout(logoutTimer);
+            logoutTimer = setTimeout(() => {
+            alert("Session expired due to inactivity. You will be logged out.");
+            window.location.href = LOGOUT_URL;
+            }, TIMEOUT_DURATION);
+        }
+
+        ['click', 'keloginydown', 'mousemove', 'scroll', 'touchstart'].forEach(event =>
+            document.addEventListener(event, resetTimer, false)
+        );
+
+        resetTimer();
+        })();
+    </script>
+
+    <style>
+        @keyframes slideIn {
+        from { transform: translateY(-10px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-slideIn {
+        animation: slideIn 0.4s ease-out;
+        }
+    </style>
+
 </body>
 </html>
